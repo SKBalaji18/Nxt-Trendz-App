@@ -24,10 +24,17 @@ class ProductItemDetails extends Component {
     similarProductsData: [],
     apiStatus: apiStatusConstants.initial,
     quantity: 1,
+    activeId: 0,
   }
 
   componentDidMount() {
     this.getProductData()
+  }
+
+  onClickSimilarProduct = id => {
+    const {history} = this.props
+    history.replace(`/products/${id}`)
+    this.setState({quantity: 1, activeId: id}, this.getProductData)
   }
 
   getFormattedData = data => ({
@@ -49,6 +56,7 @@ class ProductItemDetails extends Component {
 
     this.setState({
       apiStatus: apiStatusConstants.inProgress,
+      activeId: id,
     })
     const jwtToken = Cookies.get('jwt_token')
     const apiUrl = `https://apis.ccbp.in/products/${id}`
@@ -194,6 +202,7 @@ class ProductItemDetails extends Component {
                 <SimilarProductItem
                   productDetails={eachSimilarProduct}
                   key={eachSimilarProduct.id}
+                  onClickSimilarProduct={this.onClickSimilarProduct}
                 />
               ))}
             </ul>
